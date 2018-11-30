@@ -1,16 +1,38 @@
 const Mutation = {
   async createItem(parent, args, ctx, info) {
-    const item = await ctx.db.mutation.createItem(
+    return await ctx.db.mutation.createItem(
       {
         data: {
-          ...args,
-        },
+          ...args
+        }
       },
-      info,
+      info
     );
-
-    return item;
   },
+  async updateItem(parent, args, ctx, info) {
+    const updates = { ...args };
+    delete updates.id;
+
+    return ctx.db.mutation.updateItem(
+      {
+        data: updates,
+        where: {
+          id: args.id
+        }
+      },
+      info
+    );
+  },
+  async deleteItem(parent, args, ctx, info) {
+    return ctx.db.mutation.deleteItem(
+      {
+        where: {
+          id: args.id
+        }
+      },
+      info
+    );
+  }
 };
 
 module.exports = Mutation;
